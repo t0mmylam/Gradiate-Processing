@@ -1,0 +1,1475 @@
+{
+    "name": "55N",
+    "physical_luminance_range": [
+        0.0,
+        1.0
+    ],
+    "mean_luminance": 0.5,
+    "sweeps": [
+        {
+            "key": 0.0,
+            "trials": [
+                {
+                    "sf": 1.0,
+                    "contrast_ratio": 0.2,
+                    "duration": 9.910682999994606,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.333521432163324,
+                    "contrast_ratio": 0.2,
+                    "duration": 10.377443899982609,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.7782794100389228,
+                    "contrast_ratio": 0.2,
+                    "duration": 10.811515799956396,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 2.3713737056616555,
+                    "contrast_ratio": 0.2,
+                    "duration": 11.228546199970879,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 3.16227766016838,
+                    "contrast_ratio": 0.2,
+                    "duration": 11.879478699993342,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 4.216965034285824,
+                    "contrast_ratio": 0.2,
+                    "duration": 14.097970000002533,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 5.623413251903492,
+                    "contrast_ratio": 0.2,
+                    "duration": 15.49999379995279,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 7.49894209332456,
+                    "contrast_ratio": 0.2,
+                    "duration": 16.801011699950323,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 10.000000000000004,
+                    "contrast_ratio": 0.2,
+                    "duration": 22.7400291999802,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 13.335214321633243,
+                    "contrast_ratio": 0.2,
+                    "duration": 54.47171620000154,
+                    "success": false,
+                    "additional_data": null
+                }
+            ]
+        },
+        {
+            "key": 106.75337052936312,
+            "trials": [
+                {
+                    "sf": 1.0,
+                    "contrast_ratio": 0.2,
+                    "duration": 25.47636029997375,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.9203826540957304,
+                    "contrast_ratio": 0.1359553594389355,
+                    "duration": 25.893036999972537,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.8471042299603007,
+                    "contrast_ratio": 0.09241929880085073,
+                    "duration": 26.56071140000131,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.7796600394665815,
+                    "contrast_ratio": 0.06282449493782019,
+                    "duration": 27.22780369996326,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.7175855764166341,
+                    "contrast_ratio": 0.04270663395420465,
+                    "duration": 27.761724999989383,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.6604533173631563,
+                    "contrast_ratio": 0.029030978848354694,
+                    "duration": 28.179052499996033,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.6078697771410314,
+                    "contrast_ratio": 0.019734585820960972,
+                    "duration": 28.76271350000752,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.5594727988296426,
+                    "contrast_ratio": 0.013415113543336344,
+                    "duration": 29.747225400002208,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.514929059481193,
+                    "contrast_ratio": 0.009119282918492124,
+                    "duration": 54.47171620000154,
+                    "success": false,
+                    "additional_data": null
+                }
+            ]
+        },
+        {
+            "key": 26.68834263234078,
+            "trials": [
+                {
+                    "sf": 1.0,
+                    "contrast_ratio": 0.2,
+                    "duration": 31.63223940000171,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.2932510762519365,
+                    "contrast_ratio": 0.1668791458840997,
+                    "duration": 32.88357849995373,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.672498346226792,
+                    "contrast_ratio": 0.13924324665503315,
+                    "duration": 34.768582099990454,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 2.1629602862873822,
+                    "contrast_ratio": 0.11618397035960476,
+                    "duration": 35.185998099972494,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 2.7972507181313544,
+                    "contrast_ratio": 0.09694340869517198,
+                    "duration": 35.7867054999806,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 3.617547501769875,
+                    "contrast_ratio": 0.08088916621071751,
+                    "duration": 36.32040169998072,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 4.678397200056396,
+                    "contrast_ratio": 0.06749357484260758,
+                    "duration": 37.78859949996695,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 6.050342214106982,
+                    "contrast_ratio": 0.05631635061199455,
+                    "duration": 38.205814599990845,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 7.824611580086376,
+                    "contrast_ratio": 0.04699012244719573,
+                    "duration": 38.8729350999929,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 10.119187347200068,
+                    "contrast_ratio": 0.03920835749488641,
+                    "duration": 54.47171620000154,
+                    "success": false,
+                    "additional_data": null
+                }
+            ]
+        },
+        {
+            "key": 53.37668526468156,
+            "trials": [
+                {
+                    "sf": 1.0,
+                    "contrast_ratio": 0.2,
+                    "duration": 40.95840079995105,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.1873231576444914,
+                    "contrast_ratio": 0.1447197292187059,
+                    "duration": 41.72590639995178,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.409736280678886,
+                    "contrast_ratio": 0.10471900012567781,
+                    "duration": 43.077202299959026,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.673812532221656,
+                    "contrast_ratio": 0.07577452671120863,
+                    "duration": 43.59413159999531,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.9873563810623387,
+                    "contrast_ratio": 0.054830344936608544,
+                    "duration": 44.328319799969904,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 2.3596342537278647,
+                    "contrast_ratio": 0.03967516336097116,
+                    "duration": 44.74559959996259,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 2.8016483930222713,
+                    "contrast_ratio": 0.028708894491538347,
+                    "duration": 45.16262839996489,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 3.3264620166128185,
+                    "contrast_ratio": 0.020773717184919133,
+                    "duration": 46.147051899984945,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 3.9495853853491942,
+                    "contrast_ratio": 0.015031833629337375,
+                    "duration": 54.47171620000154,
+                    "success": false,
+                    "additional_data": null
+                }
+            ]
+        },
+        {
+            "key": 80.06502789702235,
+            "trials": [
+                {
+                    "sf": 1.0,
+                    "contrast_ratio": 0.2,
+                    "duration": 1.5856864999514073,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.0509118634687664,
+                    "contrast_ratio": 0.13445930159883876,
+                    "duration": 2.1028431999729946,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.1044157447793956,
+                    "contrast_ratio": 0.0903965189322374,
+                    "duration": 2.5200805999920703,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.1606436083903604,
+                    "contrast_ratio": 0.06077326401297422,
+                    "duration": 3.971358999959193,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.219734137316627,
+                    "contrast_ratio": 0.04085765317533177,
+                    "duration": 4.505016799957957,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.281833075183885,
+                    "contrast_ratio": 0.027468457554613437,
+                    "duration": 5.2393067999510095,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.3470935856973965,
+                    "contrast_ratio": 0.018466948093953335,
+                    "duration": 5.9068450999911875,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.4156766304120734,
+                    "contrast_ratio": 0.012415264716874862,
+                    "duration": 6.607487999950536,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.4877513657355363,
+                    "contrast_ratio": 0.00834673911497849,
+                    "duration": 8.12514999997802,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.5634955601433351,
+                    "contrast_ratio": 0.005611483560138585,
+                    "duration": 54.47171620000154,
+                    "success": false,
+                    "additional_data": null
+                }
+            ]
+        },
+        {
+            "key": 0.0,
+            "trials": [
+                {
+                    "sf": 1.0,
+                    "contrast_ratio": 0.2,
+                    "duration": 28.0948593999492,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.333521432163324,
+                    "contrast_ratio": 0.2,
+                    "duration": 28.878797599987593,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.7782794100389228,
+                    "contrast_ratio": 0.2,
+                    "duration": 29.296125799999572,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 2.3713737056616555,
+                    "contrast_ratio": 0.2,
+                    "duration": 29.712972399953287,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 3.16227766016838,
+                    "contrast_ratio": 0.2,
+                    "duration": 30.296872799983248,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 4.216965034285824,
+                    "contrast_ratio": 0.2,
+                    "duration": 30.814236099948175,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 5.623413251903492,
+                    "contrast_ratio": 0.2,
+                    "duration": 31.231406799983233,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 7.49894209332456,
+                    "contrast_ratio": 0.2,
+                    "duration": 32.18211880000308,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 10.000000000000004,
+                    "contrast_ratio": 0.2,
+                    "duration": 33.73361749999458,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 13.335214321633243,
+                    "contrast_ratio": 0.2,
+                    "duration": 51.88533580000512,
+                    "success": false,
+                    "additional_data": null
+                }
+            ]
+        },
+        {
+            "key": 53.37668526468156,
+            "trials": [
+                {
+                    "sf": 1.0,
+                    "contrast_ratio": 0.2,
+                    "duration": 11.561499100003857,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.1873231576444914,
+                    "contrast_ratio": 0.1447197292187059,
+                    "duration": 12.412688599957619,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.409736280678886,
+                    "contrast_ratio": 0.10471900012567781,
+                    "duration": 13.44697999994969,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.673812532221656,
+                    "contrast_ratio": 0.07577452671120863,
+                    "duration": 13.997763499966823,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.9873563810623387,
+                    "contrast_ratio": 0.054830344936608544,
+                    "duration": 15.165080799954012,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 2.3596342537278647,
+                    "contrast_ratio": 0.03967516336097116,
+                    "duration": 15.598895100003574,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 2.8016483930222713,
+                    "contrast_ratio": 0.028708894491538347,
+                    "duration": 17.300909099983983,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 3.3264620166128185,
+                    "contrast_ratio": 0.020773717184919133,
+                    "duration": 17.717645699973218,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 3.9495853853491942,
+                    "contrast_ratio": 0.015031833629337375,
+                    "duration": 18.401510299998336,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 4.68943419111934,
+                    "contrast_ratio": 0.010877014462491709,
+                    "duration": 51.88533580000512,
+                    "success": false,
+                    "additional_data": null
+                }
+            ]
+        },
+        {
+            "key": 80.06502789702235,
+            "trials": [
+                {
+                    "sf": 1.0,
+                    "contrast_ratio": 0.2,
+                    "duration": 1.5182792999548838,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.0509118634687664,
+                    "contrast_ratio": 0.13445930159883876,
+                    "duration": 1.9352032999740914,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.1044157447793956,
+                    "contrast_ratio": 0.0903965189322374,
+                    "duration": 3.9038481999887154,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.1606436083903604,
+                    "contrast_ratio": 0.06077326401297422,
+                    "duration": 4.421064499998465,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.219734137316627,
+                    "contrast_ratio": 0.04085765317533177,
+                    "duration": 5.055018099956214,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.281833075183885,
+                    "contrast_ratio": 0.027468457554613437,
+                    "duration": 5.489004399976693,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.3470935856973965,
+                    "contrast_ratio": 0.018466948093953335,
+                    "duration": 6.690068099997006,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.4156766304120734,
+                    "contrast_ratio": 0.012415264716874862,
+                    "duration": 8.492034700000659,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.4877513657355363,
+                    "contrast_ratio": 0.00834673911497849,
+                    "duration": 9.326170399959665,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.5634955601433351,
+                    "contrast_ratio": 0.005611483560138585,
+                    "duration": 51.88533580000512,
+                    "success": false,
+                    "additional_data": null
+                }
+            ]
+        },
+        {
+            "key": 26.68834263234078,
+            "trials": [
+                {
+                    "sf": 1.0,
+                    "contrast_ratio": 0.2,
+                    "duration": 36.25285889999941,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.2932510762519365,
+                    "contrast_ratio": 0.1668791458840997,
+                    "duration": 36.66993239999283,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.672498346226792,
+                    "contrast_ratio": 0.13924324665503315,
+                    "duration": 37.08705589995952,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 2.1629602862873822,
+                    "contrast_ratio": 0.11618397035960476,
+                    "duration": 37.68767650000518,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 2.7972507181313544,
+                    "contrast_ratio": 0.09694340869517198,
+                    "duration": 39.07260779995704,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 3.617547501769875,
+                    "contrast_ratio": 0.08088916621071751,
+                    "duration": 39.75626689998899,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 4.678397200056396,
+                    "contrast_ratio": 0.06749357484260758,
+                    "duration": 40.22363609995227,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 6.050342214106982,
+                    "contrast_ratio": 0.05631635061199455,
+                    "duration": 41.32499900000403,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 7.824611580086376,
+                    "contrast_ratio": 0.04699012244719573,
+                    "duration": 42.95956369995838,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 10.119187347200068,
+                    "contrast_ratio": 0.03920835749488641,
+                    "duration": 51.88533580000512,
+                    "success": false,
+                    "additional_data": null
+                }
+            ]
+        },
+        {
+            "key": 106.75337052936312,
+            "trials": [
+                {
+                    "sf": 1.0,
+                    "contrast_ratio": 0.2,
+                    "duration": 20.403650199994445,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.9203826540957304,
+                    "contrast_ratio": 0.1359553594389355,
+                    "duration": 20.82058119995054,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.8471042299603007,
+                    "contrast_ratio": 0.09241929880085073,
+                    "duration": 21.238107299956027,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.7796600394665815,
+                    "contrast_ratio": 0.06282449493782019,
+                    "duration": 22.08883019996574,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.7175855764166341,
+                    "contrast_ratio": 0.04270663395420465,
+                    "duration": 22.50619479996385,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.6604533173631563,
+                    "contrast_ratio": 0.029030978848354694,
+                    "duration": 23.20677039999282,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.6078697771410314,
+                    "contrast_ratio": 0.019734585820960972,
+                    "duration": 24.708119199960493,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.5594727988296426,
+                    "contrast_ratio": 0.013415113543336344,
+                    "duration": 25.125413899950217,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.514929059481193,
+                    "contrast_ratio": 0.009119282918492124,
+                    "duration": 51.88533580000512,
+                    "success": false,
+                    "additional_data": null
+                }
+            ]
+        },
+        {
+            "key": 80.06502789702235,
+            "trials": [
+                {
+                    "sf": 1.0,
+                    "contrast_ratio": 0.2,
+                    "duration": 33.03303219994996,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.0509118634687664,
+                    "contrast_ratio": 0.13445930159883876,
+                    "duration": 33.45011119998526,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.1044157447793956,
+                    "contrast_ratio": 0.0903965189322374,
+                    "duration": 34.01731559995096,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.1606436083903604,
+                    "contrast_ratio": 0.06077326401297422,
+                    "duration": 35.43525649997173,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.219734137316627,
+                    "contrast_ratio": 0.04085765317533177,
+                    "duration": 36.252794999978505,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.281833075183885,
+                    "contrast_ratio": 0.027468457554613437,
+                    "duration": 36.669837399967946,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.3470935856973965,
+                    "contrast_ratio": 0.018466948093953335,
+                    "duration": 37.403868399967905,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.4156766304120734,
+                    "contrast_ratio": 0.012415264716874862,
+                    "duration": 38.10458809998818,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.4877513657355363,
+                    "contrast_ratio": 0.00834673911497849,
+                    "duration": 39.706009199959226,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.5634955601433351,
+                    "contrast_ratio": 0.005611483560138585,
+                    "duration": 40.12327739998,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.6430960326353756,
+                    "contrast_ratio": 0.003772580802148,
+                    "duration": 56.68982649996178,
+                    "success": false,
+                    "additional_data": null
+                }
+            ]
+        },
+        {
+            "key": 26.68834263234078,
+            "trials": [
+                {
+                    "sf": 1.0,
+                    "contrast_ratio": 0.2,
+                    "duration": 23.54009089997271,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.2932510762519365,
+                    "contrast_ratio": 0.1668791458840997,
+                    "duration": 25.49226379999891,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.672498346226792,
+                    "contrast_ratio": 0.13924324665503315,
+                    "duration": 25.909111199958716,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 2.1629602862873822,
+                    "contrast_ratio": 0.11618397035960476,
+                    "duration": 26.70997189998161,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 2.7972507181313544,
+                    "contrast_ratio": 0.09694340869517198,
+                    "duration": 27.944381099950988,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 3.617547501769875,
+                    "contrast_ratio": 0.08088916621071751,
+                    "duration": 28.361544199986383,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 4.678397200056396,
+                    "contrast_ratio": 0.06749357484260758,
+                    "duration": 29.045795499987435,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 6.050342214106982,
+                    "contrast_ratio": 0.05631635061199455,
+                    "duration": 29.5462092999951,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 7.824611580086376,
+                    "contrast_ratio": 0.04699012244719573,
+                    "duration": 56.68982649996178,
+                    "success": false,
+                    "additional_data": null
+                }
+            ]
+        },
+        {
+            "key": 53.37668526468156,
+            "trials": [
+                {
+                    "sf": 1.0,
+                    "contrast_ratio": 0.2,
+                    "duration": 1.901890099979937,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.1873231576444914,
+                    "contrast_ratio": 0.1447197292187059,
+                    "duration": 2.31903869996313,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.409736280678886,
+                    "contrast_ratio": 0.10471900012567781,
+                    "duration": 2.736046299978625,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.673812532221656,
+                    "contrast_ratio": 0.07577452671120863,
+                    "duration": 3.486971399979666,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.9873563810623387,
+                    "contrast_ratio": 0.054830344936608544,
+                    "duration": 4.95479389996035,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 2.3596342537278647,
+                    "contrast_ratio": 0.03967516336097116,
+                    "duration": 5.772577599971555,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 2.8016483930222713,
+                    "contrast_ratio": 0.028708894491538347,
+                    "duration": 6.456288299988955,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 3.3264620166128185,
+                    "contrast_ratio": 0.020773717184919133,
+                    "duration": 8.591967999993358,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 3.9495853853491942,
+                    "contrast_ratio": 0.015031833629337375,
+                    "duration": 9.30893889995059,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 4.68943419111934,
+                    "contrast_ratio": 0.010877014462491709,
+                    "duration": 56.68982649996178,
+                    "success": false,
+                    "additional_data": null
+                }
+            ]
+        },
+        {
+            "key": 106.75337052936312,
+            "trials": [
+                {
+                    "sf": 1.0,
+                    "contrast_ratio": 0.2,
+                    "duration": 13.479943199956324,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.9203826540957304,
+                    "contrast_ratio": 0.1359553594389355,
+                    "duration": 14.431085899996106,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.8471042299603007,
+                    "contrast_ratio": 0.09241929880085073,
+                    "duration": 16.032681899960153,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.7796600394665815,
+                    "contrast_ratio": 0.06282449493782019,
+                    "duration": 16.649785099958535,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.7175855764166341,
+                    "contrast_ratio": 0.04270663395420465,
+                    "duration": 17.250377299962565,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.6604533173631563,
+                    "contrast_ratio": 0.029030978848354694,
+                    "duration": 17.667517699999735,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.6078697771410314,
+                    "contrast_ratio": 0.019734585820960972,
+                    "duration": 18.08459829998901,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.5594727988296426,
+                    "contrast_ratio": 0.013415113543336344,
+                    "duration": 19.83632669999497,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.514929059481193,
+                    "contrast_ratio": 0.009119282918492124,
+                    "duration": 56.68982649996178,
+                    "success": false,
+                    "additional_data": null
+                }
+            ]
+        },
+        {
+            "key": 0.0,
+            "trials": [
+                {
+                    "sf": 1.0,
+                    "contrast_ratio": 0.2,
+                    "duration": 43.9602528999676,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.333521432163324,
+                    "contrast_ratio": 0.2,
+                    "duration": 44.37764709995827,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.7782794100389228,
+                    "contrast_ratio": 0.2,
+                    "duration": 45.261868999979924,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 2.3713737056616555,
+                    "contrast_ratio": 0.2,
+                    "duration": 45.67894399998477,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 3.16227766016838,
+                    "contrast_ratio": 0.2,
+                    "duration": 46.22956329997396,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 4.216965034285824,
+                    "contrast_ratio": 0.2,
+                    "duration": 46.64675889996579,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 5.623413251903492,
+                    "contrast_ratio": 0.2,
+                    "duration": 47.46395399997709,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 7.49894209332456,
+                    "contrast_ratio": 0.2,
+                    "duration": 48.615078099945094,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 10.000000000000004,
+                    "contrast_ratio": 0.2,
+                    "duration": 49.06572359998245,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 13.335214321633243,
+                    "contrast_ratio": 0.2,
+                    "duration": 56.68982649996178,
+                    "success": false,
+                    "additional_data": null
+                }
+            ]
+        },
+        {
+            "key": 106.75337052936312,
+            "trials": [
+                {
+                    "sf": 1.0,
+                    "contrast_ratio": 0.2,
+                    "duration": 42.79306560003897,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.9203826540957304,
+                    "contrast_ratio": 0.1359553594389355,
+                    "duration": 43.21010760002537,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.8471042299603007,
+                    "contrast_ratio": 0.09241929880085073,
+                    "duration": 44.49462940002559,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.7796600394665815,
+                    "contrast_ratio": 0.06282449493782019,
+                    "duration": 45.078494400018826,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.7175855764166341,
+                    "contrast_ratio": 0.04270663395420465,
+                    "duration": 45.495521800010465,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.6604533173631563,
+                    "contrast_ratio": 0.029030978848354694,
+                    "duration": 46.36279530002503,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.6078697771410314,
+                    "contrast_ratio": 0.019734585820960972,
+                    "duration": 46.780045600025915,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.5594727988296426,
+                    "contrast_ratio": 0.013415113543336344,
+                    "duration": 47.197279100015294,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.514929059481193,
+                    "contrast_ratio": 0.009119282918492124,
+                    "duration": 47.61414010002045,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 0.4739317744363186,
+                    "contrast_ratio": 0.006199076935044706,
+                    "duration": 53.386575800017454,
+                    "success": false,
+                    "additional_data": null
+                }
+            ]
+        },
+        {
+            "key": 80.06502789702235,
+            "trials": [
+                {
+                    "sf": 1.0,
+                    "contrast_ratio": 0.2,
+                    "duration": 13.496751600003336,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.0509118634687664,
+                    "contrast_ratio": 0.13445930159883876,
+                    "duration": 14.547867799992673,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.1044157447793956,
+                    "contrast_ratio": 0.0903965189322374,
+                    "duration": 15.148347900016233,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.1606436083903604,
+                    "contrast_ratio": 0.06077326401297422,
+                    "duration": 16.16613480000524,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.219734137316627,
+                    "contrast_ratio": 0.04085765317533177,
+                    "duration": 17.501063800009433,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.281833075183885,
+                    "contrast_ratio": 0.027468457554613437,
+                    "duration": 18.068278999999166,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.3470935856973965,
+                    "contrast_ratio": 0.018466948093953335,
+                    "duration": 18.484965800016653,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.4156766304120734,
+                    "contrast_ratio": 0.012415264716874862,
+                    "duration": 19.936636800004635,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.4877513657355363,
+                    "contrast_ratio": 0.00834673911497849,
+                    "duration": 20.60421210003551,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.5634955601433351,
+                    "contrast_ratio": 0.005611483560138585,
+                    "duration": 53.386575800017454,
+                    "success": false,
+                    "additional_data": null
+                }
+            ]
+        },
+        {
+            "key": 0.0,
+            "trials": [
+                {
+                    "sf": 1.0,
+                    "contrast_ratio": 0.2,
+                    "duration": 1.3846265000174753,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.333521432163324,
+                    "contrast_ratio": 0.2,
+                    "duration": 1.8851145000080578,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.7782794100389228,
+                    "contrast_ratio": 0.2,
+                    "duration": 2.4192719000275247,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 2.3713737056616555,
+                    "contrast_ratio": 0.2,
+                    "duration": 2.919674100005068,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 3.16227766016838,
+                    "contrast_ratio": 0.2,
+                    "duration": 4.287683600035962,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 4.216965034285824,
+                    "contrast_ratio": 0.2,
+                    "duration": 5.055003600020427,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 5.623413251903492,
+                    "contrast_ratio": 0.2,
+                    "duration": 6.456390900013503,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 7.49894209332456,
+                    "contrast_ratio": 0.2,
+                    "duration": 8.058166200004052,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 10.000000000000004,
+                    "contrast_ratio": 0.2,
+                    "duration": 11.795122299983632,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 13.335214321633243,
+                    "contrast_ratio": 0.2,
+                    "duration": 53.386575800017454,
+                    "success": false,
+                    "additional_data": null
+                }
+            ]
+        },
+        {
+            "key": 53.37668526468156,
+            "trials": [
+                {
+                    "sf": 1.0,
+                    "contrast_ratio": 0.2,
+                    "duration": 33.41689749999205,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.1873231576444914,
+                    "contrast_ratio": 0.1447197292187059,
+                    "duration": 33.83372679998865,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.409736280678886,
+                    "contrast_ratio": 0.10471900012567781,
+                    "duration": 34.2508300000336,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.673812532221656,
+                    "contrast_ratio": 0.07577452671120863,
+                    "duration": 35.9027333999984,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.9873563810623387,
+                    "contrast_ratio": 0.054830344936608544,
+                    "duration": 36.65344860003097,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 2.3596342537278647,
+                    "contrast_ratio": 0.03967516336097116,
+                    "duration": 37.50424799998291,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 2.8016483930222713,
+                    "contrast_ratio": 0.028708894491538347,
+                    "duration": 38.98883990000468,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 3.3264620166128185,
+                    "contrast_ratio": 0.020773717184919133,
+                    "duration": 39.47308319999138,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 3.9495853853491942,
+                    "contrast_ratio": 0.015031833629337375,
+                    "duration": 53.386575800017454,
+                    "success": false,
+                    "additional_data": null
+                }
+            ]
+        },
+        {
+            "key": 26.68834263234078,
+            "trials": [
+                {
+                    "sf": 1.0,
+                    "contrast_ratio": 0.2,
+                    "duration": 22.939438500034157,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.2932510762519365,
+                    "contrast_ratio": 0.1668791458840997,
+                    "duration": 23.42353860003641,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 1.672498346226792,
+                    "contrast_ratio": 0.13924324665503315,
+                    "duration": 24.874852299981285,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 2.1629602862873822,
+                    "contrast_ratio": 0.11618397035960476,
+                    "duration": 25.37530150002567,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 2.7972507181313544,
+                    "contrast_ratio": 0.09694340869517198,
+                    "duration": 26.14272930001607,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 3.617547501769875,
+                    "contrast_ratio": 0.08088916621071751,
+                    "duration": 27.51103819999844,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 4.678397200056396,
+                    "contrast_ratio": 0.06749357484260758,
+                    "duration": 28.161695000017062,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 6.050342214106982,
+                    "contrast_ratio": 0.05631635061199455,
+                    "duration": 29.62943060003454,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 7.824611580086376,
+                    "contrast_ratio": 0.04699012244719573,
+                    "duration": 31.031282300013117,
+                    "success": true,
+                    "additional_data": null
+                },
+                {
+                    "sf": 10.119187347200068,
+                    "contrast_ratio": 0.03920835749488641,
+                    "duration": 53.386575800017454,
+                    "success": false,
+                    "additional_data": null
+                }
+            ]
+        }
+    ]
+}

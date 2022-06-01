@@ -1,0 +1,60 @@
+   INFO :: 2021-04-30 09:33:49,007 :: visionaut.writer.core     :: Line  118 :: Log opened with level DEBUG (10).
+  DEBUG :: 2021-04-30 09:33:49,007 :: visionaut.writer.core     :: Line  119 :: ShadyEngine Info:
+    sys: 3.9.4 (tags/v3.9.4:1f2e308, Apr  6 2021, 13:40:21) [MSC v.1928 64 bit (AMD64)]
+    sys.platform: win32
+    platform.machine: AMD64
+    platform.architecture: ('64bit', 'WindowsPE')
+    platform.win32_ver: ('10', '10.0.17763', 'SP0', 'Multiprocessor Free')
+    numpy: 1.20.2
+    pillow: 8.2.0
+    PIL: 8.2.0
+    Shady: ('1.13.0', 'unknown revision', 'C:\\Users\\Westpoint\\Documents\\westpoint-gradiate\\Lib\\site-packages\\Shady')
+    matplotlib: 3.4.1
+    cv2.cv2: 4.5.1
+    backend: shadylib
+    ShaDyLib: ('1.13.0', 'git _= %SECOND', '20201202-142153', 'Shady/accel/libShady-Windows-64bit.dll')
+    OpenGL: 4.5.0 - Build 24.20.100.6287
+    GLSL: 4.50 - Build 24.20.100.6287
+   INFO :: 2021-04-30 09:33:50,194 :: visionaut.gaze.stream     :: Line  212 :: Starting UNLICENSED eye tracker stream.
+  DEBUG :: 2021-04-30 09:33:51,757 :: visionaut.program         :: Line  602 :: Activating Task: Gradiate(0)...
+   INFO :: 2021-04-30 09:33:51,790 :: visionaut.task            :: Line  262 :: Launching standalone task 'Gradiate'.
+   INFO :: 2021-04-30 09:33:51,840 :: visionaut.gaze.core       :: Line  842 :: Gaze State: TRACKER_STARTING_UP
+   INFO :: 2021-04-30 09:33:52,892 :: visionaut.gaze.core       :: Line  915 :: Gaze State: GAZE_ACTIVE
+   INFO :: 2021-04-30 09:34:08,380 :: visionaut.Gradiate(0)     :: Line  399 :: Starting Gradiate(0) repeat 1 out of 4
+   INFO :: 2021-04-30 09:35:15,721 :: visionaut.Gradiate(0)     :: Line  399 :: Starting Gradiate(0) repeat 2 out of 4
+   INFO :: 2021-04-30 09:36:26,258 :: visionaut.Gradiate(0)     :: Line  399 :: Starting Gradiate(0) repeat 3 out of 4
+   INFO :: 2021-04-30 09:36:36,135 :: visionaut.gaze.core       :: Line  863 :: Gaze State: ERROR_GAZE_TOO_CLOSE
+   INFO :: 2021-04-30 09:36:37,357 :: visionaut.gaze.core       :: Line  915 :: Gaze State: GAZE_ACTIVE
+   INFO :: 2021-04-30 09:37:56,633 :: visionaut.Gradiate(0)     :: Line  399 :: Starting Gradiate(0) repeat 4 out of 4
+  DEBUG :: 2021-04-30 09:39:28,107 :: visionaut.program         :: Line  777 :: Stopping program...
+  DEBUG :: 2021-04-30 09:39:28,107 :: visionaut.program         :: Line  861 :: Finishing task 'Gradiate(0)'...
+  DEBUG :: 2021-04-30 09:39:28,107 :: visionaut.Gradiate(0)     :: Line  322 :: Changing task Gradiate(0) state to FINISHED...
+  DEBUG :: 2021-04-30 09:39:28,107 :: visionaut.Gradiate(0)     :: Line  324 :: Task state changed.
+  DEBUG :: 2021-04-30 09:39:28,107 :: visionaut.Gradiate(0)     :: Line  550 :: No data to save for sweep with key 53.37668526468156
+  DEBUG :: 2021-04-30 09:39:28,107 :: visionaut.Gradiate(0)     :: Line  550 :: No data to save for sweep with key 0.0
+  DEBUG :: 2021-04-30 09:39:28,107 :: visionaut.Gradiate(0)     :: Line  550 :: No data to save for sweep with key 26.68834263234078
+  DEBUG :: 2021-04-30 09:39:28,107 :: visionaut.Gradiate(0)     :: Line  550 :: No data to save for sweep with key 80.06502789702235
+  DEBUG :: 2021-04-30 09:39:28,107 :: visionaut.Gradiate(0)     :: Line  550 :: No data to save for sweep with key 106.75337052936312
+  DEBUG :: 2021-04-30 09:39:28,107 :: visionaut.Gradiate(0)     :: Line  574 :: Updating CSF log threshold stats for task Gradiate(0)...
+  DEBUG :: 2021-04-30 09:39:28,108 :: visionaut.Gradiate(0)     :: Line  576 :: Stats updated.
+ RESULT :: 2021-04-30 09:39:28,108 :: visionaut.Gradiate(0)     :: Line  586 :: Sweep last successes:
+    cpd: -0.297 | -log10(rms_contrast_ratio): 2.082
+    cpd:  0.173 | -log10(rms_contrast_ratio): 2.078
+    cpd:  0.615 | -log10(rms_contrast_ratio): 1.858
+    cpd:  0.838 | -log10(rms_contrast_ratio): 1.289
+    cpd:  1.063 | -log10(rms_contrast_ratio): 0.699
+  DEBUG :: 2021-04-30 09:39:28,109 :: visionaut.Gradiate(0)     :: Line  587 :: Writing CSF JSON file for task Gradiate(0)...
+  DEBUG :: 2021-04-30 09:39:28,115 :: visionaut.Gradiate(0)     :: Line  589 :: CSF file written.
+  DEBUG :: 2021-04-30 09:39:28,115 :: visionaut.program         :: Line  871 :: Task Gradiate(0) finished.
+  DEBUG :: 2021-04-30 09:39:28,115 :: visionaut.program         :: Line  873 :: Stopping engine...
+  DEBUG :: 2021-04-30 09:39:28,115 :: visionaut.program         :: Line  875 :: Engine stopped.
+  DEBUG :: 2021-04-30 09:39:28,115 :: visionaut.program         :: Line  878 :: Stopping renderer...
+  DEBUG :: 2021-04-30 09:39:28,115 :: visionaut.program         :: Line  880 :: Renderer stopped.
+  DEBUG :: 2021-04-30 09:39:28,115 :: visionaut.program         :: Line  883 :: Destroying audio...
+  DEBUG :: 2021-04-30 09:39:28,235 :: visionaut.program         :: Line  885 :: Audio destroyed.
+   INFO :: 2021-04-30 09:39:28,236 :: visionaut.program         :: Line  890 :: Session duration: 05:36.302.
+  DEBUG :: 2021-04-30 09:39:28,236 :: visionaut.program         :: Line  892 :: Finishing writer...
+  DEBUG :: 2021-04-30 09:39:28,236 :: visionaut.program         :: Line  894 :: Writer finished.
+  DEBUG :: 2021-04-30 09:39:28,236 :: visionaut.program         :: Line  896 :: Stopping gaze...
+  DEBUG :: 2021-04-30 09:39:28,245 :: visionaut.program         :: Line  898 :: Gaze stopped.
+  DEBUG :: 2021-04-30 09:39:28,245 :: visionaut.program         :: Line  779 :: Program stopped.

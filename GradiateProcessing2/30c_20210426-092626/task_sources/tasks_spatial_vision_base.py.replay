@@ -1,0 +1,661 @@
+from __future__ import annotations
+
+__all__ = [
+    "SpatialVisionTask",
+    "ContrastFadeTask",
+    "SweepTask",
+    "FullScreenStimulusTask",
+    "SineGratingTask",
+    "NoisePatchTask",
+]
+
+import abc
+from collections import deque
+import random
+import typing as tp
+
+from visionaut import Task, maths
+from visionaut.utilities import csf
+from visionaut.utilities.sweep import Sweep
+from visionaut.utilities.gradiator import Gradiator
+if tp.TYPE_CHECKING:
+    from visionaut.renderer.stimulus import Stimulus
+
+from visionaut.utilities import import_arbitrary_file
+
+# from tasks.base import TrackingTrialTask
+__parent_module = import_arbitrary_file("tasks_base.py.replay", next_to_file=__file__)
+TrackingTrialTask = getattr(__parent_module, "TrackingTrialTask")
+
+
+
+class SpatialVisionTask(Task, abc.ABC):
+    """Task that generates one or more CSFs using some mean luminance value.
+    
+    Call `self.csf = self.get_csf()` to assign the CSF. You can create as many as you want and assign them to different
+    attribute names; `self.csf` is defined in `initialize()` as a sensible default.
+
+    Also defines the `ShuffleStimuli` setting, which is used by essentially all stimulus-based tasks.
+    """
+
+    def initialize(self):
+        super().initialize()
+        with self.setting_group("Spatial Vision"):
+            self.MeanLuminance = 0.5
+            self.RepeatCount = 1
+            self.AllRepeatsInOne = True
+            self.ShuffleStimuli = False
+
+        self.csf = None  # type: tp.Optional[csf.CSF]
+
+    def get_csf(self):
+        return csf.CSF(
+            name=self.writer.SubjectCode if self.writer else "Replay",
+            mean_luminance=self.MeanLuminance,
+            physical_luminance_range=(self.renderer.ScreenMinimumLuminance, self.renderer.ScreenMaximumLuminance),
+        )
+
+    def intro_onset(self):
+        """Transition canvas to full-opacity mean luminance."""
+        if not self.renderer.canvas.visible:
+            self.renderer.canvas.opacity = 1
+            self.renderer.canvas.visible = True
+            self.renderer.canvas.bgcolor = self.renderer.clear_color
+        if not (self.renderer.canvas.bgcolor == self.MeanLuminance).all():
+            self.renderer.transition_canvas_color(duration=1.0, end=self.MeanLuminance)
+        self.gaze.set_message_text_color(0)
+        self.gaze.set_message_background_color(self.MeanLuminance)
+        self.gaze.set_message_background_opacity(1)
+
+    def intro_ongoing(self):
+        """Wait until canvas transition is complete."""
+        if (self.renderer.canvas.bgcolor == self.MeanLuminance).all() and self.renderer.canvas.opacity == 1:
+            return self.MAIN
+
+
+class ContrastFadeTask(SpatialVisionTask, abc.ABC):
+    """Basic single-stimulus trials, each changing only in contrast sensitivity (continuous fade).
+    
+    Different spatial frequencies are stored as `.page` textures inside a single stimulus object.
+
+    Set `self.stimulus` to your multi-page (one CPD value per page) `Stimulus` object, then call
+    `self.set_page_sequence()` to create the (optionally shuffled) sequence of pages to cycle through as individual
+    threshold trials. Call `self.update_contrast_from_tracking()` in `ongoing()` and use `self.advance_stimulus()` when
+    appropriate (e.g. using the evidence system from `TrackingTrialTask`). Call `self.record_contrast_threshold()` just
+    before advancing the stimulus.
+    """
+
+    def initialize(self):
+        super().initialize()
+        with self.setting_group("CSF Parameters"):
+            self.BaseRMSContrast = 0.1
+            self.InitialRMSContrast = 0.1
+            self.MinSpatialFrequency = 0.25
+            self.MaxSpatialFrequency = 8.0
+            self.SpatialFrequencyCount = 6
+            self.ExactSpatialFrequencies = []  # will override min, max, and count above
+
+        with self.setting_group("Contrast Changes"):
+            self.FullTrackingHitWindowSize = 10
+            self.FullTrackingHitScore = 0.5  # proportion of window size
+            self.FullTrackingContrastDownMultiplier = 0.97
+            self.PositionTrackingHitWindowSize = 60
+            self.PositionTrackingHitScore = 0.75  # proportion of window size
+            self.PositionTrackingOnlyContrastDownMultiplier = 1.0  # no fade
+            self.AllowSaccadeTrackingForFade = True
+            self.HitTimeForFadeInSeconds = 0.4
+            self.ContrastPersists = False
+
+        self.stimulus = None  # type: tp.Optional[Stimulus]
+        self.page_sequence = None  # type: iter
+        self.repeats_completed = 0
+        self.no_more_stimuli = False
+        self.full_tracking_window = deque()
+        self.position_tracking_window = deque()
+        self.full_tracking_time = 0
+        self.position_tracking_time = 0
+
+    def set_page_sequence(self):
+        page_sequence = list(self.stimulus.pages)
+        if self.ShuffleStimuli:
+            random.shuffle(page_sequence)
+        self.page_sequence = iter(page_sequence)
+
+    def advance_stimulus(self):
+        next_page = next(self.page_sequence, None)
+        if next_page is None:
+            # Repeat is finished.
+            self.repeats_completed += 1
+            if self.repeats_completed < self.RepeatCount:
+                # Set up next repeat.
+                self.set_page_sequence()
+                if self.AllRepeatsInOne:
+                    # Get going on new sequence immediately (otherwise, task will end).
+                    next_page = next(self.page_sequence)
+                else:
+                    self.no_more_stimuli = True
+                    return
+            else:
+                self.no_more_stimuli = True
+                return
+
+        self.stimulus.page = next_page
+        if not self.ContrastPersists:
+            self.stimulus.rms_contrast = self.InitialRMSContrast
+        self.full_tracking_time = 0.0
+        self.position_tracking_time = 0.0
+        self.no_more_stimuli = False
+
+    def update_contrast_from_tracking(self):
+        """Reduces stimulus RMS contrast while tracking is occurring."""
+        position_tracking = self.gaze.is_position_tracking(self.stimulus)
+        trajectory_tracking = self.gaze.is_trajectory_tracking(self.stimulus)
+        saccade_tracking = self.gaze.is_saccade_tracking(self.stimulus)
+        self.position_tracking_window.append(position_tracking)
+        self.full_tracking_window.append(
+            position_tracking
+            and (trajectory_tracking or (self.AllowSaccadeTrackingForFade and saccade_tracking))
+        )
+        full_tracking_fade = position_tracking_fade = False
+        if sum(self.position_tracking_window) / self.PositionTrackingHitWindowSize > self.PositionTrackingHitScore:
+            if sum(self.full_tracking_window) / self.FullTrackingHitWindowSize > self.FullTrackingHitScore:
+                full_tracking_fade = True
+            else:
+                position_tracking_fade = True
+
+        if full_tracking_fade:
+            self.full_tracking_time += self.delta_t
+            if self.full_tracking_time >= self.HitTimeForFadeInSeconds:
+                self.stimulus.rms_contrast *= self.FullTrackingContrastDownMultiplier  # Position + trajectory/saccade.
+        else:
+            self.full_tracking_time = 0  # reset
+
+        if position_tracking_fade:
+            self.position_tracking_time += self.delta_t
+            if self.full_tracking_time < self.HitTimeForFadeInSeconds <= self.position_tracking_time:
+                self.stimulus.rms_contrast *= self.PositionTrackingOnlyContrastDownMultiplier  # Position only.
+        else:
+            self.position_tracking_time = 0
+
+    def record_contrast_threshold(self):
+        """Record the spatial frequency and final contrast ratio value of the current stimulus trial."""
+        if isinstance(self.InitialRMSContrast, (tuple, list)):
+            initial_rms_contrast = self.InitialRMSContrast[self.stimulus.page]
+        else:
+            initial_rms_contrast = self.InitialRMSContrast
+        self.csf.add_contrast_threshold(
+            sf=self.stimulus.cpd,
+            contrast_ratio=self.stimulus.rms_contrast / self.MeanLuminance,
+            origin_contrast_ratio=initial_rms_contrast / self.MeanLuminance,
+        )
+
+    def finish(self):
+        """Finalize the CSF and output its results."""
+        super().finish()
+        try:
+            self.csf.update_log_threshold_stats()
+        except csf.CSFError as ex:
+            self.logger.warning(f"Error while calculating final thresholds: {ex}")
+            return
+        sf_values = self.csf.mean_thresholds_xy[0]
+        log_cs_values = self.csf.log_mean_thresholds_xy[1]
+        results = "".join(
+            [
+                f"\n    cpd: {cpd: .3f} | -log10(rms_contrast_ratio): {log_rms_ratio:.3f}"
+                for cpd, log_rms_ratio in zip(sf_values, log_cs_values)
+            ]
+        )
+        self.logger.result("Mean contrast thresholds:" + results)
+
+        if self.writer:
+            self.writer.write_json(f"{self.name}_csf.json", self.csf.to_dict())
+
+
+class SweepTask(SpatialVisionTask, TrackingTrialTask, abc.ABC):
+    """Task that uses the `Sweep` class to generate sequences of stimuli."""
+
+    required_systems = {"Renderer", "Gaze"}
+
+    def initialize(self):
+        super().initialize()
+
+        with self.setting_group("Trial Evidence"):
+            self.MinSweepEvidence = -25
+            self.EvidenceForSweepSuccess = 100
+
+        with self.setting_group("Sweep Parameters"):
+            self.UseContrastOnlySweeps = False
+            self.UseLowContrastAcuityContrast = 0.0
+            self.SweepsPersist = False
+            self.OriginSpatialFrequency = 1.0
+            self.OriginRMSContrastRatio = 0.2
+            self.SweepFadeIn = 0.25
+            self.SweepFadeOut = 0.25
+            self.SweepCount = 5
+            self.SweepLength = 1.0
+            self.PointsPerSweep = 16
+            self.MaxSweepsPerSet = 5
+            self.ShuffleSweeps = True
+            self.SweepSpaceSpatialFrequencyRange = [0.25, 25.0]  # Upper bound empirically determined.
+            self.SweepSpaceContrastRatioRange = [2 * 10 ** -1, 10 ** -3.5]
+            self.SweepSpaceAspectRatio = 1.0
+            self.LowerSpatialFrequencyLimit = 0.4
+            self.UpperSpatialFrequencyLimit = 20.0
+            
+        with self.setting_group("Tracking Response"):
+            self.EnableGhostAtStart = False
+            self.GhostFadeOutDuration = 0.25
+            self.GhostRadiusTolerance = 1.5
+            self.GhostDetectionTrackingDelay = 1.0
+            self.TransitionFadeDuration = 0.0
+            self.MaximumPush = 0.75
+            self.MaximumAngleForPush = 0.0
+
+        with self.hidden_settings():
+            self.DebugSweepIncrement = False
+
+        self.remaining_sweeps = []
+        self.trial_success_count = 0
+        self.all_trial_success_counts = []
+        self.sets_completed = 0
+        self.repeats_completed = 0
+        self.debug_sweep_marker = None
+
+        self.sweep_keys = []
+        self.sweep_motors = []
+        self.sweep_stimuli = {}
+        self.sweeps = {}
+        self.ghosts = {}
+        self.sound_generator = None
+
+    def get_radial_sweep_generator(self):
+        """Return a Gradiator for computing radial sweeps of varying angles through some parameterized sweep space.
+
+        If `UseContrastOnlySweeps` is true, the sweeps are all vertical at fixed spatial frequencies.
+
+        If `UseLowContrastAcuityContrast` is non-zero, the sweeps are all identical horizontal sweeps at the specified
+        contrast, with `SweepCount` copies of this one sweep.
+
+        Replace this call with a generator of your own if desired (e.g. sweeps that vary in contrast or spatial
+        frequency only).
+        """
+        if self.UseContrastOnlySweeps:
+            if self.UseLowContrastAcuityContrast:
+                raise ValueError("Cannot use both `UseContrastOnlySweeps` and `UseLowContrastAcuityContrast`.")
+            return [
+                (sf, list(zip([sf] * self.PointsPerSweep, maths.logspace(0.1, 0.0005, self.PointsPerSweep))))
+                for sf in (maths.logspace(0.5, 8.0, self.SweepCount) if self.SweepCount > 1 else (1.0,))
+            ]
+        
+        if self.UseLowContrastAcuityContrast:
+            # In this case, `SweepCount` becomes the number of simultaneous identical sweeps.
+            # All sweeps have the same legacy key: "LCA_{contrast}_i".
+            k = f"LCA_{self.UseLowContrastAcuityContrast}"
+            return [
+                (k + f"_{i}", [
+                    (sf, self.UseLowContrastAcuityContrast) for sf in maths.logspace(0.5, 16.0, self.PointsPerSweep)
+                ])
+                for i in range(self.SweepCount)
+            ]
+
+        return Gradiator(
+            origin_sf=self.OriginSpatialFrequency,
+            origin_contrast_ratio=self.OriginRMSContrastRatio,
+            mean_luminance=self.MeanLuminance,
+            sweep_count=self.SweepCount,
+            sweep_length=self.SweepLength,
+            shuffle=False,  # Shuffling is done per repeat in `onset`.
+            sf_range=self.SweepSpaceSpatialFrequencyRange,
+            contrast_ratio_range=self.SweepSpaceContrastRatioRange,
+            sweep_aspect_ratio=self.SweepSpaceAspectRatio,
+            points_per_sweep=self.PointsPerSweep,
+            lower_sf_limit=self.LowerSpatialFrequencyLimit,
+            upper_sf_limit=self.UpperSpatialFrequencyLimit,
+        )
+
+    def get_sweep_motors(self, size_in_pixels: int, speed_in_pixels_per_second: float):
+        return [
+            self.Stimulus(
+                name=f"sweep_motor_{i}",
+                size=size_in_pixels,
+                speed=speed_in_pixels_per_second,
+                leave=True,
+            )
+            for i in range(self.MaxSweepsPerSet)
+        ]
+
+    @abc.abstractmethod
+    def create_sweep_stimuli(self):
+        """Should set `sweep_stimuli`, `sweeps`, and `ghosts` dictionaries."""
+        
+    def create_debug_sweep_marker(self):
+        """Red spot flashes in the center of the screen whenever you make direct progress on a sweep."""
+        self.debug_sweep_marker = self.Stimulus(
+            name="tracking_marker",
+            size=50,
+            pp=0,
+            z=-0.5,
+            color=(0.5, 0.3, 0.3),
+            gamma=self.renderer,
+            bgcolor=self.MeanLuminance,
+        )
+
+    def get_sweeps(self):
+        """Override to customize creation of `sweeps` list (e.g. add `sound_generator` or `tracking_target`)."""
+        return [
+            Sweep(
+                key=key,
+                stimulus=self.sweep_stimuli[key],
+                stimulus_page=0 if not self.SweepsPersist else None,
+                gaze=self.gaze,
+                ghost=self.ghosts.get(key, None),
+                sound_generator=self.sound_generator,
+            )
+            for key in self.sweep_keys
+        ]
+
+    def onset(self):
+        """Set up a trial of the sweep task.
+
+        This method:
+            - activates the invisible 'motor' stimuli
+            - sets up the renderer background
+            - creates a new set of sweeps if needed (e.g. for a new repeat)
+            - activates a number (`MaxSweepsPerSet`) of sweeps that have yet to be activated (`self.remaining_sweeps`)
+            - resets trial start time, trial evidence, and last tracked sweeps        
+        """
+        super().onset()
+        if self.repeats_completed == self.RepeatCount:
+            return
+
+        for motor in self.sweep_motors:
+            motor.enter()
+
+        # Initialize repeat. If SweepsPersist is True, then sweep progress is kept across repeats.
+        if not self.sweeps or (not self.SweepsPersist and not self.remaining_sweeps):
+            self.set_up_repeat()
+
+        self.set_up_sweeps()
+
+        self.reset_trial_evidence()
+
+        self.trial_start_time = self.t
+        self.last_tracked_sweeps = []
+        self.trial_success_count = 0
+
+    def set_up_sweeps(self):
+        for motor_index in range(self.MaxSweepsPerSet):
+            if not self.remaining_sweeps:
+                break
+            sweep = self.remaining_sweeps.pop()
+            if sweep.finished:
+                self.logger.warning("Cannot initialize finished sweep.")
+                continue
+            sweep.set_movement(motor=self.sweep_motors[motor_index])
+            # Note that the presence of a ghost adds an initial delay to tracking progress.
+            sweep.activate(trigger_ghost=self.EnableGhostAtStart, fade_in_duration=self.SweepFadeIn)
+
+    def set_up_repeat(self):
+        """Set up a new repeat of all sweeps."""
+        if self.ShuffleSweeps:
+            random.shuffle(self.sweep_keys)
+        self.sweeps = self.get_sweeps()
+        self.remaining_sweeps = list(reversed(self.sweeps))
+        self.logger.info(f"Starting {self.name} repeat {self.repeats_completed + 1} out of {self.RepeatCount}")
+        
+    def ongoing(self):
+        """Main update callback of the task.
+        
+        Updates all stimuli, acts upon tracking, and ends the trial early if trial evidence falls too low.
+        """
+        if self.repeats_completed == self.RepeatCount:
+            return self.NEXT  # Whatever comes after MAIN - might not be cleanup.
+        self.update_movement()
+        self.update_ghosts()
+        self.update_trial_evidence_basic()
+        self.update_sweep_evidence()
+        self.resolve_pushes()
+        return self.check_trial_state()
+
+    def update_movement(self):
+        """Override this method to update stimulus movement, e.g. with a call to `DiamondGrid.update()`."""
+
+    def check_trial_state(self):
+        if self.trial_should_end:
+            self.terminate_trial()
+            if self.remaining_sweeps:
+                return self.MAIN  # Some sweeps remain. Don't save data yet (they may be pushed further).
+            # Repeat completed.
+            self.repeats_completed += 1
+            self.save_sweeps()  # note that sweeps are recorded even if they are persisting across repeats
+            if self.AllRepeatsInOne and self.repeats_completed < self.RepeatCount:
+                return self.MAIN  # Repeat task.
+            return self.NEXT  # Whatever comes after MAIN - might not be cleanup.
+        return None
+
+    def update_ghosts(self):
+        """Fade each ghost when observer looks at it (within some radius tolerance)."""
+        for sweep in self.sweeps:
+            if sweep.ghost:
+                sweep.check_ghost_detection(
+                    radius_tolerance=self.GhostRadiusTolerance,
+                    fade_duration=self.GhostFadeOutDuration,
+                    tracking_delay_after=self.GhostDetectionTrackingDelay,
+                )
+
+    def update_sweep_evidence(self):
+        """Apply positive evidence (tracking) and negative evidence (timeout, blind saccades) to sweeps."""
+        if self.debug_sweep_marker:
+            self.debug_sweep_marker.visible = False
+
+        for sweep in self.active_sweeps:
+            if sweep.finished or not sweep.trackable or sweep.speed == 0:
+                continue  # No evidence update to finished, untrackable, or stationary stimuli.
+
+            if self.gaze.is_position_tracking(sweep.tracking_target):
+                if (
+                    self.gaze.is_trajectory_tracking(sweep.tracking_target)
+                    or (self.AllowSaccadeTracking and self.gaze.is_saccade_tracking(sweep.tracking_target))
+                ):
+                    evidence = self.FullTrackingEvidenceGainPerSecond * self.delta_t
+                    self.last_tracked_sweeps = [sweep.motor]
+                else:
+                    evidence = self.PositionTrackingOnlyEvidenceGainPerSecond * self.delta_t
+                sweep.evidence += evidence
+                self.change_trial_evidence(evidence)
+            else:
+                if abs(self.gaze.mx) > self.width / 2 or abs(self.gaze.my) > self.height / 2:
+                    # User is looking outside the screen.
+                    sweep.evidence += self.OffScreenEvidenceLossPerSecond * self.delta_t
+
+            # Automatic evidence change.
+            sweep.evidence += self.AutomaticEvidenceLossPerSecond * self.delta_t
+
+            if sweep.evidence >= self.EvidenceForSweepSuccess:
+                self.advance_sweep(sweep)
+
+            # Clamp to sweep evidence minimum.
+            sweep.evidence = max(sweep.evidence, self.MinSweepEvidence)
+
+    def advance_sweep(self, sweep: Sweep):
+        sweep.evidence = 0
+        if self.debug_sweep_marker:
+            self.debug_sweep_marker.visible = True
+
+        if sweep.sound_generator:
+            sound = next(sweep.sound_generator, None)
+            if sound:
+                self.audio.sfx.play(sound)
+
+        sweep.data.add_trial(
+            sf=sweep.cpd,
+            contrast_ratio=sweep.rms_contrast / self.MeanLuminance,
+            success=True,
+            duration=self.t - self.trial_start_time,
+        )
+
+        if self.MaximumAngleForPush:
+            self.push_other_sweeps(sweep)
+
+        end_reached = sweep.increment_sweep(self.TransitionFadeDuration)
+        self.trial_success_count += 1
+        if end_reached:
+            self.logger.warning(
+                f"Reached end of sweep: SF {sweep.cpd:.3f}, " f"CS {1 / sweep.rms_contrast:.3f}"
+            )
+
+    def push_other_sweeps(self, success_sweep: Sweep):
+        """Adjacent angles receive some 'push' towards automatic success.
+        
+        The push amount depends on the difference in `angle`: identical sweeps (in theory) would receive a maximal push,
+        and sweeps separated by 20 degrees receive a push of 0. The push strength varies linearly between them. Every
+        push of 1 is converted into an automatic success and sweep increment.
+
+        TODO: Currently not used generally, while we consider its ramifications and best implementation.
+        """
+        for other_sweep in self.sweeps:
+            success_difference = success_sweep.data.success_count - other_sweep.data.success_count
+            angle_difference_ratio = abs(success_sweep.key - other_sweep.key) / self.MaximumAngleForPush
+            if success_difference >= 3 and other_sweep.key != success_sweep.key:
+                other_sweep.push += self.MaximumPush * max(1 - angle_difference_ratio, 0.0)
+
+    def resolve_pushes(self):
+        """Work through any 'push' evidence gained during the evidence check for adjacent sweeps."""
+        for sweep in self.sweeps:
+            while sweep.push > 1:
+                self.logger.debug(f"Sweep key pushed: {sweep.key}")
+                sweep.data.add_trial(
+                    sf=sweep.cpd,
+                    contrast_ratio=sweep.rms_contrast / self.MeanLuminance,
+                    success=True,
+                    duration=self.t - self.trial_start_time,
+                )
+                sweep.increment_sweep(fade_duration=0.25)
+                sweep.push -= 1
+
+    def terminate_trial(self):
+        """Record last SF and contrast of each active stimulus as a failure."""
+        for sweep in self.active_sweeps:
+            if sweep.finished:
+                continue
+            sweep.data.add_trial(
+                sf=sweep.cpd,
+                contrast_ratio=sweep.rms_contrast / self.MeanLuminance,
+                success=False,
+                duration=self.t - self.trial_start_time,
+            )
+            sweep.deactivate(self.SweepFadeOut)
+        self.all_trial_success_counts.append(self.trial_success_count)
+
+    def save_sweeps(self):
+        """Add sweep data to the CSF, then clear it unless `SweepsPersist=True`."""
+        for sweep in self.sweeps:
+            csf_sweep = sweep.data
+            if csf_sweep is None:
+                self.logger.debug(f"No data to save for sweep with key {sweep.key}")
+                continue
+            elif isinstance(csf_sweep, csf.CSFSweep):
+                if csf_sweep.trial_count > 0:
+                    self.csf.add_sweeps(csf_sweep)
+                if not self.SweepsPersist:
+                    # Clear CSF data.
+                    sweep.data = None
+
+    def offset(self):
+        """Deactivate all sweeps and stimuli."""
+        super().offset()
+        for sweep in self.active_sweeps:
+            sweep.deactivate(fade_out_duration=self.SweepFadeOut)
+        for motor in self.sweep_motors:
+            motor.leave()
+
+    def finish(self):
+        """Save sweeps and write to session JSON file."""
+        super().finish()
+        self.save_sweeps()
+        if self.writer:
+            # Save final CSF results to JSON.
+            try:
+                self.logger.debug(f"Updating CSF log threshold stats for task {self.name}...")
+                self.csf.update_log_threshold_stats()
+                self.logger.debug("Stats updated.")
+            except csf.CSFError as ex:
+                self.logger.error(f"Error while calculating final thresholds: {ex}")
+                return
+            results = "".join(
+                [
+                    f"\n    cpd: {cpd: .3f} | -log10(rms_contrast_ratio): {log_rms_ratio:.3f}"
+                    for cpd, log_rms_ratio in zip(*self.csf.log_mean_thresholds_xy)
+                ]
+            )
+            self.logger.result("Sweep last successes:" + results if results else "No sweeps were tracked.")
+            self.logger.debug(f"Writing CSF JSON file for task {self.name}...")
+            self.writer.write_json(f"{self.name}_csf.json", self.csf.to_dict())
+            self.logger.debug("CSF file written.")
+
+    @property
+    def active_sweeps(self):
+        return [sweep for sweep in self.sweeps if sweep.active]
+
+
+class SineGratingTask(Task, abc.ABC):
+    """Task that uses sine grating stimuli of a given size and speed."""
+
+    required_systems = {"Renderer", "Gaze"}
+
+    def initialize(self):
+        super().initialize()
+
+        with self.setting_group("Sine Grating Settings"):
+            self.GratingWidthInDVA = 6.0
+            self.GratingWindowing = 0.0
+            self.GratingSpeedInDVAPerSecond = 5.0
+            self.GratingOrientationInDegrees = 0.0
+
+
+class NoisePatchTask(Task, abc.ABC):
+    """Task that uses noise patch stimuli of a given size and speed."""
+
+    required_systems = {"Renderer", "Gaze"}
+
+    def initialize(self):
+        super().initialize()
+
+        with self.setting_group("Noise Patch Settings"):
+            self.NoiseWidthInDVA = 6.0
+            self.NoiseWindowing = 0.0
+            self.NoiseSpeedInDVAPerSecond = 5.0
+            self.NoiseDirectionInDegrees = 0.0
+
+
+class FullScreenStimulusTask(Task, abc.ABC):
+    """Task that uses a full-screen stimulus and carrier movement rather than a smaller roving envelope."""
+    def initialize(self):
+        super().initialize()
+
+        with self.setting_group("Full Screen Stimulus"):
+            self.StimulusSpeedInDVAPerSecond = 10.0
+            self.InitialDirectionInDegrees = 0.0
+            self.FlipDirectionForNextPresentation = True
+
+        self.cx_start = 0.0
+        self.cy_start = 0.0
+
+    def set_noise_carrier_start(self):
+        self.cx_start = self.width / 2
+        self.cy_start = self.height / 2
+
+    def set_carrier_scrolling(self, stimulus):
+        stimulus.cx = lambda t, s=stimulus: (
+            self.cx_start + self.d2p(self.StimulusSpeedInDVAPerSecond) * maths.cos(s.direction) * t
+        )
+        stimulus.cy = lambda t, s=stimulus: (
+            self.cy_start + self.d2p(self.StimulusSpeedInDVAPerSecond) * maths.sin(s.direction) * t
+        )
+
+    def disable_full_screen_stimulus(self, stimulus):
+        stimulus.fade_out(0.1)
+        stimulus.clear_update_callbacks()
+        self.gaze.remove_target(stimulus)
+        if self.FlipDirectionForNextPresentation:
+            stimulus.direction += 180  # Reverse direction for next presentation.

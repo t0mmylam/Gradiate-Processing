@@ -1,0 +1,80 @@
+   INFO :: 2021-04-30 08:48:22,453 :: visionaut.writer.core     :: Line  118 :: Log opened with level DEBUG (10).
+  DEBUG :: 2021-04-30 08:48:22,453 :: visionaut.writer.core     :: Line  119 :: ShadyEngine Info:
+    sys: 3.9.4 (tags/v3.9.4:1f2e308, Apr  6 2021, 13:40:21) [MSC v.1928 64 bit (AMD64)]
+    sys.platform: win32
+    platform.machine: AMD64
+    platform.architecture: ('64bit', 'WindowsPE')
+    platform.win32_ver: ('10', '10.0.17763', 'SP0', 'Multiprocessor Free')
+    numpy: 1.20.2
+    pillow: 8.2.0
+    PIL: 8.2.0
+    Shady: ('1.13.0', 'unknown revision', 'C:\\Users\\Westpoint\\Documents\\westpoint-gradiate\\Lib\\site-packages\\Shady')
+    matplotlib: 3.4.1
+    cv2.cv2: 4.5.1
+    backend: shadylib
+    ShaDyLib: ('1.13.0', 'git _= %SECOND', '20201202-142153', 'Shady/accel/libShady-Windows-64bit.dll')
+    OpenGL: 4.6.0 - Build 27.20.100.8935
+    GLSL: 4.60 - Build 27.20.100.8935
+   INFO :: 2021-04-30 08:48:23,603 :: visionaut.gaze.stream     :: Line  212 :: Starting UNLICENSED eye tracker stream.
+  DEBUG :: 2021-04-30 08:48:25,170 :: visionaut.program         :: Line  602 :: Activating Task: Gradiate(0)...
+   INFO :: 2021-04-30 08:48:25,204 :: visionaut.task            :: Line  262 :: Launching standalone task 'Gradiate'.
+   INFO :: 2021-04-30 08:48:25,412 :: visionaut.gaze.core       :: Line  842 :: Gaze State: TRACKER_STARTING_UP
+   INFO :: 2021-04-30 08:48:26,422 :: visionaut.gaze.core       :: Line  915 :: Gaze State: GAZE_ACTIVE
+   INFO :: 2021-04-30 08:48:29,567 :: visionaut.gaze.core       :: Line  863 :: Gaze State: ERROR_NO_USER_DETECTED
+   INFO :: 2021-04-30 08:48:30,156 :: visionaut.gaze.core       :: Line  915 :: Gaze State: GAZE_ACTIVE
+   INFO :: 2021-04-30 08:48:47,447 :: visionaut.Gradiate(0)     :: Line  399 :: Starting Gradiate(0) repeat 1 out of 4
+   INFO :: 2021-04-30 08:48:50,043 :: visionaut.gaze.core       :: Line  863 :: Gaze State: ERROR_NO_USER_DETECTED
+   INFO :: 2021-04-30 08:48:50,999 :: visionaut.gaze.core       :: Line  915 :: Gaze State: GAZE_ACTIVE
+   INFO :: 2021-04-30 08:48:52,063 :: visionaut.gaze.core       :: Line  863 :: Gaze State: ERROR_NO_USER_DETECTED
+   INFO :: 2021-04-30 08:48:56,004 :: visionaut.gaze.core       :: Line  915 :: Gaze State: GAZE_ACTIVE
+   INFO :: 2021-04-30 08:48:57,917 :: visionaut.gaze.core       :: Line  863 :: Gaze State: ERROR_NO_USER_DETECTED
+   INFO :: 2021-04-30 08:48:58,474 :: visionaut.gaze.core       :: Line  915 :: Gaze State: GAZE_ACTIVE
+   INFO :: 2021-04-30 08:49:19,672 :: visionaut.gaze.core       :: Line  863 :: Gaze State: ERROR_NO_USER_DETECTED
+   INFO :: 2021-04-30 08:49:20,044 :: visionaut.gaze.core       :: Line  915 :: Gaze State: GAZE_ACTIVE
+   INFO :: 2021-04-30 08:49:46,066 :: visionaut.gaze.core       :: Line  863 :: Gaze State: ERROR_GAZE_TOO_CLOSE
+   INFO :: 2021-04-30 08:49:47,673 :: visionaut.gaze.core       :: Line  915 :: Gaze State: GAZE_ACTIVE
+   INFO :: 2021-04-30 08:49:51,638 :: visionaut.Gradiate(0)     :: Line  399 :: Starting Gradiate(0) repeat 2 out of 4
+   INFO :: 2021-04-30 08:49:56,309 :: visionaut.gaze.core       :: Line  863 :: Gaze State: ERROR_NO_USER_DETECTED
+   INFO :: 2021-04-30 08:49:57,066 :: visionaut.gaze.core       :: Line  915 :: Gaze State: GAZE_ACTIVE
+   INFO :: 2021-04-30 08:50:07,871 :: visionaut.Gradiate(0)     :: Line  399 :: Starting Gradiate(0) repeat 3 out of 4
+   INFO :: 2021-04-30 08:50:27,074 :: visionaut.Gradiate(0)     :: Line  399 :: Starting Gradiate(0) repeat 4 out of 4
+   INFO :: 2021-04-30 08:50:47,594 :: visionaut.gaze.core       :: Line  863 :: Gaze State: ERROR_NO_USER_DETECTED
+   INFO :: 2021-04-30 08:50:47,967 :: visionaut.gaze.core       :: Line  915 :: Gaze State: GAZE_ACTIVE
+   INFO :: 2021-04-30 08:50:50,130 :: visionaut.gaze.core       :: Line  863 :: Gaze State: ERROR_NO_USER_DETECTED
+   INFO :: 2021-04-30 08:50:50,902 :: visionaut.gaze.core       :: Line  915 :: Gaze State: GAZE_ACTIVE
+   INFO :: 2021-04-30 08:50:53,917 :: visionaut.gaze.core       :: Line  863 :: Gaze State: ERROR_NO_USER_DETECTED
+   INFO :: 2021-04-30 08:50:55,958 :: visionaut.gaze.core       :: Line  915 :: Gaze State: GAZE_ACTIVE
+  DEBUG :: 2021-04-30 08:51:03,705 :: visionaut.program         :: Line  777 :: Stopping program...
+  DEBUG :: 2021-04-30 08:51:03,705 :: visionaut.program         :: Line  861 :: Finishing task 'Gradiate(0)'...
+  DEBUG :: 2021-04-30 08:51:03,705 :: visionaut.Gradiate(0)     :: Line  322 :: Changing task Gradiate(0) state to FINISHED...
+  DEBUG :: 2021-04-30 08:51:03,705 :: visionaut.Gradiate(0)     :: Line  324 :: Task state changed.
+  DEBUG :: 2021-04-30 08:51:03,705 :: visionaut.Gradiate(0)     :: Line  550 :: No data to save for sweep with key 106.75337052936312
+  DEBUG :: 2021-04-30 08:51:03,705 :: visionaut.Gradiate(0)     :: Line  550 :: No data to save for sweep with key 0.0
+  DEBUG :: 2021-04-30 08:51:03,705 :: visionaut.Gradiate(0)     :: Line  550 :: No data to save for sweep with key 80.06502789702235
+  DEBUG :: 2021-04-30 08:51:03,705 :: visionaut.Gradiate(0)     :: Line  550 :: No data to save for sweep with key 53.37668526468156
+  DEBUG :: 2021-04-30 08:51:03,705 :: visionaut.Gradiate(0)     :: Line  550 :: No data to save for sweep with key 26.68834263234078
+  DEBUG :: 2021-04-30 08:51:03,705 :: visionaut.Gradiate(0)     :: Line  574 :: Updating CSF log threshold stats for task Gradiate(0)...
+  DEBUG :: 2021-04-30 08:51:03,705 :: visionaut.utilities.csf   :: Line  494 :: One or more sweeps had no successes. Ignoring these for threshold calculation.
+  DEBUG :: 2021-04-30 08:51:03,705 :: visionaut.Gradiate(0)     :: Line  576 :: Stats updated.
+ RESULT :: 2021-04-30 08:51:03,706 :: visionaut.Gradiate(0)     :: Line  586 :: Sweep last successes:
+    cpd: -0.072 | -log10(rms_contrast_ratio): 1.034
+    cpd:  0.391 | -log10(rms_contrast_ratio): 0.974
+  DEBUG :: 2021-04-30 08:51:03,707 :: visionaut.Gradiate(0)     :: Line  587 :: Writing CSF JSON file for task Gradiate(0)...
+  DEBUG :: 2021-04-30 08:51:03,709 :: visionaut.Gradiate(0)     :: Line  589 :: CSF file written.
+  DEBUG :: 2021-04-30 08:51:03,709 :: visionaut.program         :: Line  871 :: Task Gradiate(0) finished.
+  DEBUG :: 2021-04-30 08:51:03,709 :: visionaut.program         :: Line  873 :: Stopping engine...
+  DEBUG :: 2021-04-30 08:51:03,709 :: visionaut.program         :: Line  875 :: Engine stopped.
+  DEBUG :: 2021-04-30 08:51:03,709 :: visionaut.program         :: Line  878 :: Stopping renderer...
+  DEBUG :: 2021-04-30 08:51:03,709 :: visionaut.program         :: Line  880 :: Renderer stopped.
+  DEBUG :: 2021-04-30 08:51:03,709 :: visionaut.program         :: Line  883 :: Destroying audio...
+  DEBUG :: 2021-04-30 08:51:03,807 :: visionaut.program         :: Line  885 :: Audio destroyed.
+   INFO :: 2021-04-30 08:51:03,807 :: visionaut.program         :: Line  890 :: Session duration: 02:38.485.
+  DEBUG :: 2021-04-30 08:51:03,808 :: visionaut.program         :: Line  892 :: Finishing writer...
+  DEBUG :: 2021-04-30 08:51:03,808 :: visionaut.program         :: Line  894 :: Writer finished.
+  DEBUG :: 2021-04-30 08:51:03,808 :: visionaut.program         :: Line  896 :: Stopping gaze...
+  DEBUG :: 2021-04-30 08:51:03,822 :: visionaut.program         :: Line  898 :: Gaze stopped.
+  DEBUG :: 2021-04-30 08:51:03,822 :: visionaut.program         :: Line  779 :: Program stopped.
+  DEBUG :: 2021-04-30 08:51:03,876 :: visionaut.utilities.csf   :: Line  494 :: One or more sweeps had no successes. Ignoring these for threshold calculation.
+  DEBUG :: 2021-04-30 08:51:03,963 :: visionaut.utilities.csf   :: Line  494 :: One or more sweeps had no successes. Ignoring these for threshold calculation.
+WARNING :: 2021-04-30 08:51:03,966 :: visionaut.utilities.csf   :: Line  876 :: Could not plot smoothed mean thresholds (probably not enough data).
+  DEBUG :: 2021-04-30 08:51:04,513 :: visionaut.utilities.csf   :: Line  494 :: One or more sweeps had no successes. Ignoring these for threshold calculation.

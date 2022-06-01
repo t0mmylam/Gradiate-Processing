@@ -1,0 +1,13 @@
+import java.io.*;
+import java.util.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.*;
+public class reader {
+ public static void main(String[] args){
+     File file = new File("C:\Users\Victoria Lam\West Point\CLS Pharmacology - Curveball Protocol - Gradiate Data\blue machine data\11C_20210426-125607\Gradiate(0)_csf.txt");
+     Scanner sc = new Scanner(file);
+
+    sc.useDelimiter("\\Z");
+    System.out.println(sc.next());
+ }
+}

@@ -1,0 +1,397 @@
+"""Assorted base/mix-in classes for all tasks, including trials, movement systems, and background music."""
+from __future__ import annotations
+
+__all__ = ["TrackingTrialTask", "CurvingControllerTask", "GridMovementTask", "MusicTask", "NoteRewardTask"]
+
+import abc
+import random
+import typing as tp
+
+from visionaut import Task, maths
+from visionaut.renderer import color
+from visionaut.renderer.dynamics import controllers, grids
+
+
+class TrackingTrialTask(Task, abc.ABC):
+    """Task that uses a global evidence counter to determine when a trial should end."""
+
+    def initialize(self):
+        super().initialize()
+        with self.setting_group("Tracking"):
+            self.EyeToTrack = "mean"
+            self.EvidenceForTrialEnd = -300.0
+            self.StartingTrialEvidence = 500.0
+            self.MinimumTrialEvidence = -300.0
+            self.MaximumTrialEvidence = 0.0
+            self.PositionTrackingOnlyEvidenceGainPerSecond = 60.0
+            self.FullTrackingEvidenceGainPerSecond = 300.0  # requires target fixation *and* target pursuit
+            self.AllowSaccadeTracking = True
+            self.SaccadeEvidenceLossWeight = -1.0  # multiplied by saccade distance
+            self.SaccadeTargetRadiusTolerance = 1.0
+            self.OffScreenEvidenceLossPerSecond = 0.0
+            self.AutomaticEvidenceLossPerSecond = -60.0
+            self.MaximumTrialDuration = 0.0
+            self.ManualTrialTerminationEvent = ""  # prevents automatic termination if given
+            self.HelperImagePath = "ghost.png"
+            self.HelperSoundPath = ""
+
+        with self.hidden_settings():
+            self.DebugTrialEvidence = False
+
+        self._trial_evidence = maths.nan
+        self.trial_start_time = 0.0
+        self.trial_evidence_locked = False
+        self.debug_trial_evidence = None
+        self._force_trial_termination = False
+
+    def onset(self):
+        self.trial_start_time = self.t
+        if self.ManualTrialTerminationEvent:
+            self.add_event_handler("manual_trial_termination", self._manual_trial_termination)
+
+    def offset(self):
+        if self.ManualTrialTerminationEvent:
+            self.remove_event_handler("manual_trial_termination")
+
+    def _manual_trial_termination(self, event):
+        if event >> self.ManualTrialTerminationEvent:
+            self._force_trial_termination = True
+
+    @property
+    def trial_evidence(self):
+        return self._trial_evidence
+
+    @trial_evidence.setter
+    def trial_evidence(self, value):
+        if not self.trial_evidence_locked:
+            self._trial_evidence = value
+
+    def create_debug_trial_evidence(self):
+        self.debug_trial_evidence = self.renderer.Text(
+            name="debug_trial_evidence",
+            xy=self.renderer.place(-0.8, -0.8),
+            visible=True,
+            font_size=30,
+            text=lambda _: f"Evidence: {self.trial_evidence:.2f}",
+        )
+
+    def reset_trial_evidence(self):
+        self.trial_evidence = self.StartingTrialEvidence
+
+    def update_trial_evidence_basic(self):
+        evidence_change = self.AutomaticEvidenceLossPerSecond * self.delta_t
+        eye = self.gaze.get_eye(self.EyeToTrack)
+        if eye.saccade.last_valid_stats.get("stop_t", None) == self.t:
+            # Saccade ended this frame. Evidence loss = saccade distance (in DVA) * loss weight.
+            if all(
+                    [
+                        maths.distance(eye, target) > target.width / 2 * self.SaccadeTargetRadiusTolerance
+                        for target in self.gaze.targets
+                    ]
+            ):
+                evidence_change += eye.saccade.last_valid_stats["distance"] * self.SaccadeEvidenceLossWeight
+        if abs(eye.x) > self.width / 2 or abs(eye.y) > self.height / 2:
+            # User is looking outside the screen.
+            evidence_change += self.OffScreenEvidenceLossPerSecond * self.delta_t
+        self.change_trial_evidence(evidence_change)
+
+    def update_trial_evidence_from_tracking(self, stimulus):
+        """Update trial evidence based on whether given `stimulus` is being tracked."""
+        if self.gaze.is_position_tracking(stimulus, eye=self.EyeToTrack):
+            if (
+                self.gaze.is_trajectory_tracking(stimulus, eye=self.EyeToTrack)
+                or (self.AllowSaccadeTracking and self.gaze.is_saccade_tracking(stimulus, eye=self.EyeToTrack))
+            ):
+                evidence_change = self.FullTrackingEvidenceGainPerSecond * self.delta_t
+            else:
+                evidence_change = self.PositionTrackingOnlyEvidenceGainPerSecond * self.delta_t
+            self.change_trial_evidence(evidence_change)
+
+    def set_trial_evidence(self, new_evidence):
+        """Automatically clips evidence between given minimum and maximum parameters.
+
+        Note that evidence is allowed to be above the given maximum, provided that it only decreases from there. Trials
+        typically start with some padding evidence far above the standard maximum, for example.
+        """
+        maximum = max(self.MaximumTrialEvidence, self.trial_evidence)
+        self.trial_evidence = maths.clip(new_evidence, self.MinimumTrialEvidence, maximum)
+
+    def change_trial_evidence(self, evidence_delta):
+        """Add the given `evidence_delta` to trial evidence (and clip)."""
+        self.set_trial_evidence(self.trial_evidence + evidence_delta)
+
+    @property
+    def trial_duration(self):
+        return self.t - self.trial_start_time
+
+    @property
+    def trial_should_end(self):
+        if self.ManualTrialTerminationEvent:
+            if self._force_trial_termination:
+                self._force_trial_termination = False
+                return True
+            return False
+        if 0.0 < self.MaximumTrialDuration < self.trial_duration:
+            return True
+        return self.trial_evidence <= self.EvidenceForTrialEnd
+
+    @property
+    def eye_to_track(self):
+        return self.gaze.get_eye(self.EyeToTrack)
+
+
+class CurvingControllerTask(Task, abc.ABC):
+    """Task that moves stimuli using a `CurvingController` object.
+
+    Use `self.curving_controller = self.get_curving_controller(carrier)` to create a `CurvingController` with the given
+    task settings, then `stimulus.animate = controller` to make it the sole stimulus update callback.
+
+    You can call `self.get_curving_controller(carrier)` to create as many curving controllers as you want; the
+    `self.curving_controller` attribute is just a default available name defined in `initialize()`.
+    
+    Use `carrier=True` for stimuli whose movement should occur in the stimulus carrier rather than the envelope (e.g.
+    full-screen stimuli).
+
+    Generally, you should only assign the `CurvingController` to `stimulus.animate` at trial onset, or stimulus position
+    may start changing before it is visible.
+    """
+
+    def initialize(self):
+        super().initialize()
+        with self.setting_group("Curving Controller"):
+            self.AngularAcceleration = 200.0
+            self.AngularAccelerationStd = 5.0
+            self.MaxTurnDuration = 3.0
+            self.MatchRotation = True
+            self.BoundaryTurnDistance = 200.0
+            self.BoundaryTurnVelocity = 75.0
+            self.BoundaryElasticity = 0.0
+
+        self.curving_controller = None
+
+    def get_curving_controller(self, carrier=False):
+        return controllers.CurvingController(
+            boundary_size=self.size,
+            angular_acceleration=self.AngularAcceleration,
+            angular_acceleration_std=self.AngularAccelerationStd,
+            max_turn_duration=self.MaxTurnDuration,
+            match_rotation=self.MatchRotation,
+            boundary_turn_distance=self.BoundaryTurnDistance,
+            boundary_turn_velocity=self.BoundaryTurnVelocity,
+            elasticity=self.BoundaryElasticity,
+            carrier=carrier,
+        )
+
+
+class GridMovementTask(Task, abc.ABC):
+    """Task that moves stimuli using the `DiamondGrid` system with the given parameters.
+    
+    Assign `self.grid == self.get_grid(grid_update_period)` in your `configure()` method, where `grid_update_period` is
+    the time between new path calculations in the grid. Typically, this should be equal to `self.GridCellSize` divided
+    by the desired speed (in pixels per second) of your grid stimuli.
+
+    Use `self.grid.add_stimulus(stimulus)` to add a `Stimulus` to the grid system, then call
+    `self.update_grid(stimulus_update_order)` in your `ongoing()` method, where `stimulus_update_order` is an optional
+    sequence of `Stimulus` objects that specifies the order in which they should calculate new paths.
+    """
+
+    def initialize(self):
+        super().initialize()
+        with self.setting_group("Grid Movement"):
+            self.GridRowCount = 5
+            self.GridColCount = 9
+            self.GridRelativeCellSize = 0.1  # proportion of display width
+            self.AbruptTurnChance = 0.15
+
+        with self.hidden_settings():
+            self.DebugGridPoints = False
+
+        self.grid = None  # type: tp.Optional[grids.DiamondGrid]
+        self._gaze_inactive_pause = False
+
+    def get_grid_update_period(self, speed):
+        """Computes and returns default grid update period, assuming you want stimuli to move at the given `speed` per
+        each straight lines segment.
+
+        `speed` should be in pixels per second.
+        """
+        return self.GridRelativeCellSize * self.renderer.width / speed
+
+    def get_grid(self, grid_update_period=None, speed=None):
+        if grid_update_period is None:
+            if speed is None:
+                raise ValueError(f"`grid_update_period` or `speed` (to compute default period) must be given.")
+            grid_update_period = self.get_grid_update_period(speed)
+
+        return grids.DiamondGrid(
+            row_count=self.GridRowCount,
+            col_count=self.GridColCount,
+            cell_size=int(self.GridRelativeCellSize * self.renderer.width),
+            grid_update_period=grid_update_period,
+            abrupt_turn_chance=self.AbruptTurnChance,
+        )
+
+    def update_gaze_inactive(self, t):
+        """Pauses the grid if gaze is not active, or unpauses it if gaze is active again."""
+        super().update_gaze_inactive(t)
+        if not self.gaze.active:
+            if not self.grid.paused:
+                self._gaze_inactive_pause = True
+                self.grid.pause(t)
+
+    def update_gaze_active_fresh(self, t):
+        super().update_gaze_active_fresh(t)
+        if self._gaze_inactive_pause:
+            self._gaze_inactive_pause = False
+            if not self.paused:
+                self.grid.unpause(t)
+
+    def pause(self):
+        super().pause()
+        if not self.grid.paused:
+            self.grid.pause(self.t)
+
+    def unpause(self):
+        super().unpause()
+        if not self._gaze_inactive_pause:
+            self.grid.unpause(self.t)
+
+    def update_grid(self, stimulus_update_order=()):
+        self.grid.update(self.t, stimulus_update_order=stimulus_update_order)
+
+    def create_debug_grid_points(self):
+        for (row, col), node in self.grid.nodes.items():
+            self.Stimulus(size=5, xy=node.xy, z=-0.5, color=(1, 0, 0), visible=True)
+            self.Text(text=f"({row}, {col})", font_size=30, xy=node.xy, z=-0.5, color=(0, 0, 0), visible=True)
+
+
+class MusicTask(Task, abc.ABC):
+    """Task that plays music randomly chosen from a list.
+    
+    Use the `start_music()` and `stop_music()` methods whenever you need. Note that `start_music()` will always start
+    tracks from the beginning, unless that track is already playing. Use `self.audio.music` methods for finer control.
+    """
+
+    SONG_KEYS = {
+        "A Very Small Wish.mp3": "Bbm",
+        "Hollow Bastion.mp3": "Bm",
+        "Welcome to Wonderland.mp3": "Ds",
+        "Waltz of the Damned.mp3": "Dm",
+        "Traverse Town.mp3": "Fs",
+    }
+
+    def initialize(self):
+        super().initialize()
+
+        with self.setting_group("Music"):
+            self.EnableMusic = True
+            self.MusicPlaylist = [
+                "A Very Small Wish.mp3",
+                "Welcome to Wonderland.mp3",
+                "Traverse Town.mp3",
+            ]
+
+        self.selected_music = ""
+
+    def load_random_music(self):
+        if self.EnableMusic and self.MusicPlaylist and not self.program.replay:
+            # Selects one random song from the playlist. (Currently ignored during replay.)
+            self.selected_music = random.choice(self.MusicPlaylist)
+            self.audio.music.load(self.selected_music)
+
+    def start_music(self, fade_in_duration=1.0):
+        """Play selected music. If the selected track is already playing, do nothing."""
+        if self.selected_music and (not self.audio.music.playing or self.audio.music.sound_name != self.selected_music):
+            # Fade in new selected music.
+            self.audio.music.play(self.selected_music, volume=0.0, loop=True)
+            self.audio.music.position = 0
+            self.audio.music.fade_in(fade_in_duration, end=0.5)
+
+    def stop_music(self, fade_out_duration=1.0):
+        """Stop music, if playing."""
+        if self.audio.music.playing:
+            self.audio.music.fade_out(fade_out_duration)
+
+
+class NoteRewardTask(Task, abc.ABC):
+    """Task that includes a post-task "reward" state where some note count score is displayed."""
+    REWARD = "Reward"
+
+    _NOTE_IMAGE = None
+    _NOTES = []  # Pool of note stimuli, shared across all instances of Curveball.
+
+    def initialize(self):
+        super().initialize()
+        self.completion_message = None
+        self.score_message = None
+
+    def generate_note_stimuli(self, note_count):
+        if len(NoteRewardTask._NOTES) < note_count:
+            # Expand shared pool of note stimuli (all sharing the same image texture data).
+            if not NoteRewardTask._NOTE_IMAGE:
+                NoteRewardTask._NOTE_IMAGE = self.Stimulus("musical_note.png", scale=1, opacity=0)
+            NoteRewardTask._NOTES += [
+                self.Stimulus(
+                    NoteRewardTask._NOTE_IMAGE,
+                    color=color.random_bright_color(0.2),
+                    name=f"{self.name}_note{n}",
+                    scaledWidth=self.d2p(1.5),
+                    leave=True,
+                )
+                for n in range(len(NoteRewardTask._NOTES), note_count)
+            ]
+            NoteRewardTask._NOTE_IMAGE.ShareTexture(*NoteRewardTask._NOTES)
+
+    def create_reward_messages(self):
+        self.completion_message = self.Text(
+            text="Task complete.",
+            color=1,
+            font_size=self.d2p(3),
+            y=self.d2p(8.6),
+            opacity=0,
+        )
+        self.score_message = self.Text(
+            text="You collected X notes!",
+            color=1,
+            font_size=self.d2p(1.5),
+            y=self.d2p(2.9),
+            opacity=0,
+        )
+
+    def build_task_state_machine(self):
+        super().build_task_state_machine()
+        self.add_state(self.REWARD, onset=self.reward_onset, offset=self.reward_offset, duration=7.0, next=self.CLEANUP)
+        self.state_machine.states[self.MAIN].next = self.REWARD
+
+    @abc.abstractmethod
+    def calculate_note_score(self) -> int:
+        """Returns note score for reward screen."""
+        ...
+
+    def reward_onset(self):
+        self.renderer.clear_color = 0
+        self.renderer.fade_out_canvas(duration=2.0, end=0.0)
+
+        total_note_score = self.calculate_note_score()
+
+        if total_note_score > 0:
+            self.score_message.text = f"You collected {total_note_score} note{'' if total_note_score == 1 else 's'}!"
+        else:
+            self.score_message.text = "Well done!"
+
+        self.completion_message.fade_in(0.5)
+        self.score_message.fade_in(0.5, delay=3.0)
+        note_start_x = self.d2p(9)
+        note_x_spacing = self.d2p(1.25)
+        note_y_spacing = self.d2p(1.25)
+        for i in range(total_note_score):
+            self._NOTES[i].x = -note_start_x + note_x_spacing * (i % 15)
+            self._NOTES[i].y = -note_y_spacing * (i // 15)
+            self._NOTES[i].fade_in(0.5, delay=1 + (i / total_note_score))
+
+    def reward_offset(self):
+        """You may want to wait for these fade-outs to complete in your `cleanup_ongoing`."""
+        self.completion_message.fade_out(0.5)
+        self.score_message.fade_out(0.5)
+        for note in self._NOTES:
+            note.fade_out(0.5, finish="leave")

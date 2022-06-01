@@ -1,0 +1,152 @@
+"""Flagship eye-tracking task published in 2020 for rapidly measuring a full CSF."""
+
+from __future__ import annotations
+
+__all__ = ["Gradiate"]
+
+from visionaut.audio.sounds import Glockenspiel
+from visionaut.renderer import CIRCULAR_MASK, spatial
+
+from visionaut.utilities import import_arbitrary_file
+
+# from tasks.base import GridMovementTask, MusicTask, NoteRewardTask
+__parent_module = import_arbitrary_file("tasks_base.py.replay", next_to_file=__file__)
+GridMovementTask = getattr(__parent_module, "GridMovementTask")
+MusicTask = getattr(__parent_module, "MusicTask")
+NoteRewardTask = getattr(__parent_module, "NoteRewardTask")
+
+# from tasks.spatial_vision.base import NoisePatchTask, SweepTask
+__parent_module = import_arbitrary_file("tasks_spatial_vision_base.py.replay", next_to_file=__file__)
+NoisePatchTask = getattr(__parent_module, "NoisePatchTask")
+SweepTask = getattr(__parent_module, "SweepTask")
+
+
+
+class Gradiate(NoisePatchTask, SweepTask, GridMovementTask, MusicTask, NoteRewardTask):
+    """Current flagship CSF assessment task.
+    
+    Multiple stimuli move around the screen on a grid simultaneously, and progress their SF/contrast along linear sweeps
+    in log-log CSF space until tracking stops. A glockenspiel note plays each time a stimulus progresses.
+    """
+
+    required_systems = {"Renderer", "Gaze", "Audio"}
+
+    def initialize(self):
+        super().initialize()
+        self.SweepCount = 15
+
+    def configure(self):
+        self.load_random_music()
+        self.generate_note_stimuli(self.PointsPerSweep * self.SweepCount * self.RepeatCount)
+        self.csf = self.get_csf()
+        self.grid = self.get_grid(speed=self.d2p(self.NoiseSpeedInDVAPerSecond))
+        self.sweep_motors = self.get_sweep_motors(self.d2p(self.NoiseWidthInDVA), 0.0)
+        self.create_sweep_stimuli()
+        self.create_reward_messages()
+        for ghost in self.ghosts.values():
+            ghost.scale = 0.65 * self.d2p(self.NoiseWidthInDVA) / ghost.width
+            ghost.detected = False
+
+        if self.DebugSweepIncrement:
+            self.create_debug_sweep_marker()
+        if self.DebugGridPoints:
+            self.create_debug_grid_points()
+        if self.DebugTrialEvidence:
+            self.create_debug_trial_evidence()
+
+    def create_sweep_stimuli(self):
+
+        def update_aperture_center(stimulus, _):
+            stimulus.apertureCenter = [stimulus.x + self.width / 2, stimulus.y + self.height / 2]
+
+        for key, sweep in self.get_radial_sweep_generator():
+            sweep_cpd, sweep_rms_contrast = zip(*sweep)
+            self.sweep_keys.append(key)
+
+            sweep_noise_sources = list(
+                spatial.generate(
+                    width=self.d2p(self.NoiseWidthInDVA),
+                    cpd=sweep_cpd,
+                    rms_contrast=sweep_rms_contrast,
+                    vdp=self.renderer.vdp,
+                    mean=self.MeanLuminance,
+                    pixels_per_frame=self.d2p(self.NoiseSpeedInDVAPerSecond) / self.renderer.MaxFPS,
+                )
+            )
+
+            self.sweep_stimuli[key] = self.Spatial(
+                source=sweep_noise_sources,
+                cpd=[s.cpd for s in sweep_noise_sources],
+                rms_contrast=[s.rms_contrast for s in sweep_noise_sources],
+                multipage=True,
+                name=f"noise-key{key:.3f}" if isinstance(key, (int, float)) else f"noise-key{key}",
+                bgcolor=self.MeanLuminance,
+                gamma=self.renderer,
+                pp=self.NoiseWindowing,
+                buffers=("x", "y", "rotation"),
+                prescreeningFunction=CIRCULAR_MASK,
+                apertureSize=self.d2p(self.NoiseWidthInDVA),
+                apertureCenter=(self.width / 2, self.height / 2),
+                animate=update_aperture_center,
+                opacity=int(self.SweepFadeIn is None),  # only set to zero if fade-in is expected
+                leave=True,
+            )
+
+            self.ghosts[key] = self.Stimulus(
+                source="ghost.png", name=f"ghost-key{key}", opacity=0.1, z=-0.1, leave=True
+            )
+
+    def set_up_repeat(self):
+        """Prepare the sounds and music for the new repeat."""
+        key = self.SONG_KEYS.get(self.selected_music, "C") if self.selected_music else "C"
+        self.sound_generator = Glockenspiel(sfx_player=self.audio.sfx, scale=key, random_notes=True)
+        super().set_up_repeat()
+        self.start_music(1.0)
+
+    def onset(self):
+        super().onset()
+        self.audio.music.play(volume=0.5)
+
+        for motor in self.sweep_motors:
+            if motor in (sweep.motor for sweep in self.active_sweeps):
+                if motor not in self.grid.stimuli:
+                    self.grid.add_stimulus(stimulus=motor, immediate=True)
+            elif motor in self.grid.stimuli:
+                self.grid.remove_stimulus(stimulus=motor)
+
+        self.add_event_handler("trigger_ghost", self.trigger_ghost, required_type="mouse_release")
+
+    def trigger_ghost(self, _):
+        for sweep_ in self.active_sweeps:
+            sweep_.force_ghost_appearance(0.4)
+
+    def update_movement(self):
+        """Updates grid. Called by parent method `SweepTask.ongoing()`."""
+        self.update_grid(stimulus_update_order=self.last_tracked_sweeps)
+
+    def calculate_note_score(self) -> int:
+        return sum(self.all_trial_success_counts)
+
+    def reward_onset(self):
+        super().reward_onset()
+        self.remove_event_handler("trigger_ghost")
+        self.stop_music(7.0)
+
+    def cleanup_onset(self):
+        self.stop_music(2.0)
+
+    def cleanup_ongoing(self):
+        """Wait for music to fade out, canvas to fade back in, and reward message to disappear."""
+        if not self.audio.music.playing and not self.completion_message.visible:
+            return self.FINISHED
+
+
+if __name__ == "__main__":
+    t = Gradiate(
+        Gaze_QuadCalibrateGaze=True,
+        RepeatCount=1,
+        SweepCount=15,
+        EnableMusic=False,
+        console_log_level="INFO",
+    )
+    t.start()
